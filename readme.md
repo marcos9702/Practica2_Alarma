@@ -34,6 +34,20 @@ interrupciones.
 
 ![alt tag](https://github.com/marcos9702/Practica2_Alarma/blob/master/dise%C3%B1o.png)
 
+# Procedimiento
+
+ El programa consiste en que la alarma estara apagada hasta que un individuo (iman) se aproxime esta comenzara a zonar mediante una
+ interrupcion y solo sera desactivada por el administrador (pushBoton) mediante otra interrupcion y de este modo se lograra el consumo minimo
+ de energia ya que solo estara activado la alarma cuando se ejecuten las interrupciones y no siempre.
+
 # Resultados
 
-[![Watch the video](https://github.com/marcos9702/Practica2_Alarma/blob/master/video.mp4)
+ Imagen del circuito apagado
+
+![alt tag](https://github.com/marcos9702/Practica2_Alarma/blob/master/apagado.jpg)
+
+ Imagen del circuito encendido
+
+![alt tag](https://github.com/marcos9702/Practica2_Alarma/blob/master/encendido.png)
+
+[![ver video de resultados](https://github.com/marcos9702/Practica2_Alarma/blob/master/video.mp4)
