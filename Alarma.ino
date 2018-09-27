@@ -1,3 +1,5 @@
+#include <LowPower.h>
+
 /* Flores Bonilla José Marcos
  * Instituto Tecnologico de León
  * Ingeniería en Sistemas Computacionales
@@ -5,6 +7,7 @@
  * 
  * Alarma notificadora de seguridad
  */
+ #include "LowPower.h" 
 
 //delcaramos de constantes 
 const int intervaloTiempo = 250; // intervalo de tiempo para controlar ruido
@@ -14,7 +17,9 @@ const int pinBoton = 3;          // pin para pushBoton
 
 //declaracion de variables
 volatile int ISRContador = 0;    // contabilizar el tiempo de ejecucion de Reed Switch
-volatile boolean enciende;       // encender o apagar la Reed Switch
+volatile int enciende;       // encender o apagar la Reed Switch
+
+//variables para calcular tiempo
 int contadorReal = 0;            // mostrar en monitor el tiempo de ejecucion acumulable
 long contaTiempo1 = 0;           // tiempo de ejecucion de Reed Switch
 long contaTiempo2 = 0;           // tiempo de ejecucion de pushBoton
@@ -24,20 +29,23 @@ void setup(){
   pinMode(pinBoton , INPUT_PULLUP);
   pinMode(pinSalida,OUTPUT);
   Serial.begin(9600);
-  enciende=false; 
+  enciende=LOW; 
   //interrupcion de Reed Switch cuando esta apagado a encendido
   attachInterrupt(0, interrupcionEncendido,RISING);
-  //interrupcion de PushBoton cuando es presioando
+  //interrupcion de PushBoton cuando es presionado
   attachInterrupt(1, interrupcionAPagado,FALLING);
 }
 
 void loop(){
-  if (enciende==true){
+  //ahorro de energia durmiendo el arduino hasta que se use
+  LowPower.powerDown(SLEEP_FOREVER,ADC_OFF,BOD_OFF);
+  if (enciende==LOW)
+        digitalWrite(pinSalida,LOW);
+  else{
     contadorReal = ISRContador; //guardamos tiempo de ejecucion de reed y mostramos
     Serial.println(contadorReal);
-    digitalWrite(pinSalida,HIGH);
-  }else
-    digitalWrite(pinSalida,LOW);
+    digitalWrite(pinSalida,HIGH);  
+  }
 }
 
 //interrupcion que funciona cuando el switch cambia de estado
@@ -46,7 +54,7 @@ void interrupcionEncendido(){
   if (millis() > contaTiempo1 + intervaloTiempo){
     ISRContador++;
     contaTiempo1 = millis();
-    enciende=true; 
+    enciende=HIGH; 
   }
 }
 
@@ -55,6 +63,6 @@ void interrupcionAPagado(){
     //verificamos si no es un efecto rebote de pushBoton y cambiamos de estado "enciende"
   if (millis() > contaTiempo2 + intervaloTiempo){
     contaTiempo2 = millis();
-    enciende=false; 
+    enciende=LOW; 
   }
 }
